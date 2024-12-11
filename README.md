@@ -145,12 +145,60 @@ O código verifica automaticamente se o processo foi bem-sucedido comparando:
 
 Como ambos os valores são iguais (65), confirmamos que a implementação está correta.
 
+# Processo de Decifragem e Segurança do RSA
+
+## Processo de Decifragem
+
+### 1. Visão Geral
+Bob recebe a mensagem cifrada C = 2790 e usa sua chave privada d = 2753 para recuperar a mensagem original. O processo é feito através da fórmula:
+
+```
+M = C^d mod n
+```
+
+Onde:
+- M é a mensagem original que queremos recuperar
+- C é a mensagem cifrada (2790)
+- d é a chave privada (2753)
+- n é o módulo RSA (3233)
+
+### 2. Cálculos
+No nosso exemplo:
+```
+M = 2790^2753 mod 3233 = 65
+```
+
+Este cálculo é realizado de forma eficiente usando exponenciação modular rápida (implementada na função `pow()` do Python), pois calcular 2790^2753 diretamente seria computacionalmente inviável.
+
+### 3. Verificação
+A mensagem recuperada (65) é exatamente igual à mensagem original que Alice queria enviar, confirmando que o processo funcionou corretamente.
+
 ## Segurança do RSA
 
-A segurança do RSA baseia-se na dificuldade computacional de:
-1. Fatorar n em seus fatores primos (p e q)
-2. Calcular φ(n) sem conhecer p e q
-3. Determinar d sem conhecer φ(n)
+### 1. Fundamentos Matemáticos
+A segurança do RSA baseia-se em três problemas matemáticos complexos:
+
+1. **Fatoração de Números Grandes**: Dado n, encontrar p e q
+2. **Cálculo da Função Totiente**: Calcular φ(n) sem conhecer p e q
+3. **Problema do Logaritmo Discreto**: Encontrar e dado d, ou vice-versa
+
+### 2. Por que é Seguro?
+
+#### A. Fatoração de Números Grandes
+- No nosso exemplo, usamos números pequenos para fins didáticos (n = 3233)
+- Em aplicações reais:
+  - Os primos p e q têm tipicamente 1024-4096 bits cada
+  - Um n de 2048 bits teria aproximadamente 617 dígitos decimais
+  - Fatorar números muito grandes é computacionalmente inviável com a tecnologia atual
+
+#### B. Caminho Unidirecional
+- É fácil multiplicar dois números primos grandes (p × q = n)
+- É extremamente difícil fazer o caminho inverso (encontrar p e q dado n)
+
+#### C. Interdependência dos Componentes
+1. Sem p e q, é praticamente impossível calcular φ(n)
+2. Sem φ(n), é impossível calcular a chave privada d
+3. Sem d, é computacionalmente inviável decifrar a mensagem
 
 ## Como Usar o Código
 
